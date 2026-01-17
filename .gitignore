@@ -1,0 +1,70 @@
+# =========================
+# Python
+# =========================
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg-info/
+.eggs/
+dist/
+build/
+
+# Virtualenv
+.venv/
+venv/
+env/
+
+# =========================
+# PyProject / Packaging
+# =========================
+pip-wheel-metadata/
+poetry.lock
+*.lock
+
+# =========================
+# Environment variables
+# =========================
+.env
+.env.*
+!.env.example
+
+# =========================
+# Jupyter / Data
+# =========================
+.ipynb_checkpoints/
+*.ipynb
+
+# CSVs (se forem dados sensíveis)
+data.csv
+*.csv
+
+# =========================
+# Logs
+# =========================
+*.log
+logs/
+
+# =========================
+# Docker
+# =========================
+*.pid
+docker-data/
+postgres-data/
+pgdata/
+
+# =========================
+# OS / Editor
+# =========================
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# =========================
+# Tests / Coverage
+# =========================
+.pytest_cache/
+.coverage
+htmlcov/
