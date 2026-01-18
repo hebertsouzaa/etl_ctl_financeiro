@@ -1,6 +1,6 @@
 import psycopg2
 from psycopg2.extras import execute_batch
-from config.database import DB_CONFIG
+from src.config.database import DB_CONFIG
 
 def load(df):
     print("📤 Carregando dados no PostgreSQL...")
@@ -9,10 +9,10 @@ def load(df):
     cur = conn.cursor()
 
     # Inserir contas
-    contas = df["conta"].unique()
+    contas = df["Conta"].unique()
     cur.executemany(
         """
-        INSERT INTO contas (nome)
+        INSERT INTO tb_contas (nome)
         VALUES (%s)
         ON CONFLICT (nome) DO NOTHING
         """,
@@ -20,10 +20,10 @@ def load(df):
     )
 
     # Inserir categorias
-    categorias = df[["categoria", "tipo"]].drop_duplicates()
+    categorias = df[["Categoria", "Tipo"]].drop_duplicates()
     cur.executemany(
         """
-        INSERT INTO categorias (nome, tipo)
+        INSERT INTO tb_categorias (nome, tipo)
         VALUES (%s, %s)
         ON CONFLICT (nome) DO NOTHING
         """,
@@ -31,29 +31,32 @@ def load(df):
     )
 
     # Buscar IDs
-    cur.execute("SELECT id, nome FROM contas")
+    cur.execute("SELECT id, nome FROM tb_contas")
     contas_map = {nome: id for id, nome in cur.fetchall()}
 
-    cur.execute("SELECT id, nome FROM categorias")
+    cur.execute("SELECT id, nome FROM tb_categorias")
     categorias_map = {nome: id for id, nome in cur.fetchall()}
 
     # Inserir transações
     transacoes = [
         (
-            row["data"],
-            row["descricao"],
-            abs(row["valor"]),
-            row["tipo"],
-            contas_map[row["conta"]],
-            categorias_map[row["categoria"]]
+            row["Data"],
+            row["Descrição"],
+            abs(row["Valor"]),
+            row["Tipo"],
+            row["Transação"],
+            contas_map[row["Conta"]],
+            categorias_map[row["Categoria"]]
         )
         for _, row in df.iterrows()
     ]
 
+    # print(transacoes[:5])  # Debug: print first 5 transactions")
+
     sql = """
-        INSERT INTO transacoes
-        (data, descricao, valor, tipo, conta_id, categoria_id)
-        VALUES (%s, %s, %s, %s, %s, %s)
+        INSERT INTO tb_transacoes
+        (data, descricao, valor, tipo, transação, conta_id, categoria_id)
+        VALUES (%s, %s, %s, %s, %s, %s, %s)
     """
 
     execute_batch(cur, sql, transacoes, page_size=1000)
