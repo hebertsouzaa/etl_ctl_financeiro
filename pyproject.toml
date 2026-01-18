@@ -4,14 +4,16 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "etl-ctl-financeiro"
-version = "0.1.0"
+version = "0.1.1"
 description = "Financeiro"
 readme = "README.md"
 requires-python = ">=3.14"
 dependencies = [
     "pandas",
     "psycopg2-binary",
-    "python-dotenv"
+    "python-dotenv",
+    "streamlit",
+    "plotly"
 ]
 
 [tool.setuptools]
